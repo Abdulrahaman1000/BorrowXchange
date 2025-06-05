@@ -1,0 +1,191 @@
+{
+	"info": {
+		"_postman_id": "fbd5f8a9-32fd-4ea7-9817-b160fab8fdf7",
+		"name": "BorrowXchange",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "10665347"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "POST /api/register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Abdulrahman Adekeye\",\r\n  \"email\": \"walex1257@gmail.com\",\r\n  \"password\": \"yourpassword\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /api/login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"ofisat@example.com\",\r\n  \"password\": \"yourpassword\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "#### POST `/api/register`\n\n- **Description**: Register a new user and auto-create a wallet.\n    \n- **Request Body (JSON)**:\n    \n\n{  \n\"name\": \"Abdulrahman Adekeye\",  \n\"email\": \"[Abdul@gmail.com](https://mailto:Abdul@gmail.com)\",  \n\"password\": \"12345678\"  \n}\n\n- **Notes**:\n    \n    - Password is hashed with bcrypt.\n        \n    - Wallet created automatically with balance 0. but i manually added price to the wallet directly from database for easy testing\n        \n\n#### 🔹 POST `/api/login`\n\n- **Description**: Login to receive JWT token.\n    \n- **Request Body (JSON)**:\n    \n\n{  \n\"email\": \"[jane@example.com](https://mailto:jane@example.com)\",  \n\"password\": \"12345678\"  \n}\n\nresponse:\n\n{  \n\"token\": \"your-jwt-token\"  \n}"
+		},
+		{
+			"name": "Wallet & Transfers",
+			"item": [
+				{
+					"name": "POST /api/transfer",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NDBlNmQzOTEzNDQ4Y2NjNDJmMTNmMCIsImlhdCI6MTc0OTA5NTA1N30.rlvp_PO9crto7U1YgyiiY8Jw7CAp06ihqgVOlsOKn78",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"receiver_wallet_id\": \"86791eb7-9eb8-4977-99e5-d400555ceb13\",\r\n  \"amount\": 100\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/transfer",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"transfer"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "StartFragment\n\n#### POST `/api/transfer`\n\n- **Description**: Initiate a money transfer (requires receiver approval).\n    \n- **Headers**: Authorization: Bearer `{{token}}`\n    \n- **Request Body (JSON)**:\n    \n\n{  \n\"receiver_wallet_id\": \"uuid-of-receiver\",  \n\"amount\": 500  \n}\n\n- **Validations**:\n    \n    - Sender must have enough balance\n        \n    - Cannot send to self\n        \n    - Receiver wallet must exist\n        \n- **Notes**:\n    \n    - Status will be set to `PENDING`\n        \n    - Amount reserved from sender\n        \n\nEndFragment"
+		},
+		{
+			"name": "Transactions",
+			"item": [
+				{
+					"name": "POST /api/transactions/:id/accept",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "POST /api/transactions/:id/decline",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "GET /api/transactions",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "OnlyAdmin(allTransactions)",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			],
+			"description": "#### POST `/api/transactions/:id/accept`\n\n- **Description**: Receiver accepts the pending transfer.\n    \n- **Headers**: Authorization: Bearer `{{token}}`\n    \n- **URL Example**: `/api/transactions/12345/accept`\n    \n- **Notes**:\n    \n    - Funds moved to receiver\n        \n    - Status updated to `COMPLETED`\n        \n    - Sender notified\n        \n\n#### POST `/api/transactions/:id/decline`\n\n- **Description**: Receiver declines the transfer.\n    \n- **Headers**: Authorization: Bearer `{{token}}`\n    \n- **URL Example**: `/api/transactions/12345/decline`\n    \n- **Notes**:\n    \n    - Funds refunded to sender\n        \n    - Status updated to `DECLINED`\n        \n    - Sender notified\n        \n\n#### GET `/api/transactions`\n\n- **Description**: Fetch user transactions.\n    \n- **Headers**: Authorization: Bearer `{{token}}`\n    \n- **Query Params**:\n    \n    - `?status=pending`\n        \n    - `?type=sent|received`\n        \n    - `?limit=10&skip=0`\n        \n\n#### GET `/api/admin/transactions`\n\n- **Description**: Fetch all user transactions.\n    \n- **Headers**: Authorization: Bearer `{{token}}`\n    \n- **Query Params**:\n    \n    - `?status=pending`\n        \n    - `?type=sent|received`\n        \n    - `?limit=10&skip=0`"
+		},
+		{
+			"name": "Notifications",
+			"item": [
+				{
+					"name": "GET /api/notifications",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NDE3OThmOTEzNDQ4Y2NjNDJmMTQzNyIsImlhdCI6MTc0OTEyMjczNH0.SY1B0f493Gg1ufc5slXCbbEC3qksFYSDPEyhWlAk3rA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/notifications",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"notifications"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "GET `/api/notifications`\n\n- **Description**: Fetch all notifications for the logged-in user.\n    \n- **Headers**: Authorization: Bearer `{{token}}`"
+		}
+	]
+}
