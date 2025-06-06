@@ -18,7 +18,7 @@ exports.transfer = async (req, res) => {
       return res.status(400).json({ message: 'Insufficient balance' });
     }
 
-    // Deduct amount temporarily until accepted
+  
     senderWallet.balance -= amount;
     await senderWallet.save();
 

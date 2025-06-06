@@ -19,10 +19,10 @@ router.post('/transactions/:id/accept', auth, acceptTransaction);
 router.post('/transactions/:id/decline', auth, declineTransaction);
 router.get('/transactions', auth, getTransactions);
 
-// ✅ Admin route to get all transactions
+
 router.get('/admin/transactions', auth, isAdmin, getAllTransactions);
 
-// ✅ Admin route to promote user to admin
+
 router.put('/make-admin/:id', auth, isAdmin, async (req, res) => {
   try {
     const user = await User.findByIdAndUpdate(

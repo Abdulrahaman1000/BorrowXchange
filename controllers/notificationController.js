@@ -10,7 +10,7 @@ exports.getNotifications = async (req, res) => {
       notifications.map(async (note) => {
         let updatedMessage = note.message;
 
-        // Only customize message if it's a "pending transfer" type
+    
         if (note.message.includes('pending transfer')) {
           const transaction = await Transaction.findOne({
             receiver: req.user.id,

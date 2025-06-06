@@ -1,4 +1,3 @@
-// MongoDB connection logic
 const mongoose = require('mongoose');
 
 const connectDB = async () => {

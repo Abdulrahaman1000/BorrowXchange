@@ -22,7 +22,7 @@ router.put('/make-admin/:id', auth, isAdmin, async (req, res) => {
   }
 });
 
-// Admin-only: Get all transactions
+//  Get all transactions
 router.get('/admin/transactions', auth, isAdmin, getAllTransactions);
 
 module.exports = router;
